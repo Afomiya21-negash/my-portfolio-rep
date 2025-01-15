@@ -1,40 +1,6 @@
 <?php
 require_once 'connection/db.php';
-$aboutResult = $db->conn->query("SELECT COUNT(*) AS total FROM about");
-$aboutRow = $aboutResult->fetch_assoc();
-if ($aboutRow['total'] == 0) {
-    $defaultContentNeeded['about'] = true;
-}
 
-// Check if experience table is empty
-$experienceResult = $db->conn->query("SELECT COUNT(*) AS total FROM experience");
-$experienceRow = $experienceResult->fetch_assoc();
-if ($experienceRow['total'] == 0) {
-    $defaultContentNeeded['experience'] = true;
-}
-
-// Check if projects table is empty
-$projectsResult = $db->conn->query("SELECT COUNT(*) AS total FROM projects");
-$projectsRow = $projectsResult->fetch_assoc();
-if ($projectsRow['total'] == 0) {
-    $defaultContentNeeded['projects'] = true;
-}
-
-
-// Load static content from default.html
-$defaultContent = file_get_contents('default.html');
-$dom = new DOMDocument();
-libxml_use_internal_errors(true); //HTML warnings
-$dom->loadHTML($defaultContent);
-libxml_clear_errors();
-
-// default.html
-$defaultSections = [
-    'hero' => $dom->saveHTML($dom->getElementById('hero')),
-    'about' => $dom->saveHTML($dom->getElementById('about')),
-    'experience' => $dom->saveHTML($dom->getElementById('experience')),
-    'projects' => $dom->saveHTML($dom->getElementById('projects')),
-];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,11 +32,30 @@ $defaultSections = [
     <!-- Hero Section -->
 <header class="hero">
   <div class="profile-container">
-    <img src="me.jpeg" alt="Afomiya Mesfin">
+    <!-- <img src="me.jpeg" alt="Afomiya Mesfin"> -->
+    <?php
+    $heroContent = $db->managehero('read');
+    if ($heroContent->num_rows > 0) {
+        while ($row = $heroContent->fetch_assoc()) {
+            echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='hero Picture'>";
+    
+        }
+    }
+    ?>
   </div>
   <div class="header-content">
-    <h1>Hello, I'm <span style="color: #3b6d91;">A</span>fomiya Mesfin</h1>
-    <p>Web Designer</p>
+    <!-- <h1>Hello, I'm <span style="color: #3b6d91;">A</span>fomiya Mesfin</h1>
+    <p>Web Designer</p> -->
+    <?php
+    $heroContent = $db->managehero('read');
+    if ($heroContent->num_rows > 0) {
+        while ($row = $heroContent->fetch_assoc()) {
+            echo "<h1>" . htmlspecialchars($row['title']) . "</h1>";
+            echo "<p>" . htmlspecialchars($row['description']) . "</p>";
+    
+        }
+    }
+    ?>
     <div class="btn-container">  
         <button><a href="#contact">contact info</a></button>
       </div>
@@ -84,14 +69,14 @@ $defaultSections = [
     $aboutContent = $db->manageAbout('read');
     if ($aboutContent->num_rows > 0) {
         while ($row = $aboutContent->fetch_assoc()) {
-            echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
+            echo "<h2>" . htmlspecialchars($row['title']) . "</h2>";
     
         }
     }
     ?>
     <div class="container1">
         <div class="profile-photo">
-            <img src="me2.jpg"  class="profile-photo"> 
+            <!-- <img src="me2.jpg"  class="profile-photo">  -->
             <?php
     $aboutContent = $db->manageAbout('read');
     if ($aboutContent->num_rows > 0) {
@@ -105,15 +90,6 @@ $defaultSections = [
     ?>
           </div>
           <div class="about-content">
-     <p>I'm Afomiya Mesfin, a motivated web developer with growing expertise in frontend technologies and a keen interest in expanding my backend skill
-    While I'm currently exploring the world of backend development, my strengths lie in crafting responsive, user-friendly websites using HTML, CSS, and JavaScript.        
-    </p>
-    
-    <p>I'm eager to learn and apply these skills to create more complex web applications, focusing on improving user experiences and delivering efficient solutions.
-        As I continue my journey into backend development, I'm excited about the opportunity to learn and grow.
-        My goal is to develop a well-rounded skill set that allows me to contribute effectively to both frontend and backend aspects of web projects.
-               
-    </p>
     <?php
     $aboutContent = $db->manageAbout('read');
     if ($aboutContent->num_rows > 0) {
@@ -126,20 +102,16 @@ $defaultSections = [
     </div>
 
     </div>
-
-    
-   
-   
 </section>
 
 <!-- Experience Section -->
 <h2 class="experience-head"  id="experience">Experience</h2>
 <section id="experience" class="experience-section">
 <div class="container">
-        <h3>frontend development</h3>
+        <!-- <h3>frontend development</h3>
         <p><span>HTML</span>: intermediate</p>
         <p><span>CSS</span>: intermediate</p>
-        <p><span>JavaScript</span>: basic</p>
+        <p><span>JavaScript</span>: basic</p> -->
         <?php
     $experienceContent = $db->manageExperience('read');
     if ($experienceContent->num_rows > 0) {
@@ -152,11 +124,11 @@ $defaultSections = [
     ?>  
       
     </div>
-    <div class="container">
-        <h3>Backend development</h3>
+    <!-- <div class="container"> -->
+        <!-- <h3>Backend development</h3>
         <p><span>PHP</span>: basic</p>
-        <p><span>C#</span>: basic</p>
-        <?php
+        <p><span>C#</span>: basic</p> -->
+        <!-- <?php
     $experienceContent = $db->manageExperience('read');
     if ($experienceContent->num_rows > 0) {
         while ($row = $experienceContent->fetch_assoc()) {
@@ -166,7 +138,7 @@ $defaultSections = [
         }
     }
     ?>
-    </div>
+    </div> -->
    
 </section>
 
@@ -176,20 +148,33 @@ $defaultSections = [
      
 <div class="container1">
         <div class="project-photo">
-            <img src="mind.avif">  
-            <div class="ptoject-para"><h4>Mindful Moments</h4><p>Will provide the website link soon.</p></div>
+            <!-- <img src="mind.avif">  
+            <div class="ptoject-para"><h4>Mindful Moments</h4><p>Will provide the website link soon.</p></div> -->
             <?php
     $projectContent = $db->manageProject('read');
     if ($projectContent->num_rows > 0) {
         while ($row = $projectContent->fetch_assoc()) {
-            echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
-            echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'>View Project</a>";
+           
             if (!empty($row['picture'])) {
                 echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='Project Picture'>";
+                
             }
+            
         }
     }
     ?>
+     <div class="ptoject-para">
+              <?php
+    $projectContent = $db->manageProject('read');
+    if ($projectContent->num_rows > 0) {
+        while ($row = $projectContent->fetch_assoc()) {
+           
+              echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
+            echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'>View Project</a>";
+           
+        }
+    }
+    ?></div>
         </div>
         
     </div>
@@ -199,7 +184,7 @@ $defaultSections = [
 <section id="contact" class="contact-section">
     <h2>Contact Me</h2>
     <div class="contact-links">
-        <a href="mailto:afomiyamesfin@gmail.com">
+        <!-- <a href="mailto:afomiyamesfin@gmail.com">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg>
             afomiyamesfin@gmail.com
         </a>
@@ -207,7 +192,20 @@ $defaultSections = [
         <a href="https://www.linkedinmobileapp.com/\?trk\=qrcode-onboarding" target="_parent">
             <img src="linkedin.png">
             LinkedIn 
-        </a>
+        </a> -->
+        <?php
+    $contactContent = $db->managecontact('read');
+    if ($contactContent->num_rows > 0) {
+        while ($row = $contactContent->fetch_assoc()) {
+           
+              echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'> <img src='" . htmlspecialchars($row['picture']) . "' alt='Project Picture'><p>" . htmlspecialchars($row['title']) . "</p>
+              </a>";
+           
+           
+        }
+    }
+    
+    ?>
     </div>
 </section>
 

@@ -10,12 +10,16 @@ $section = $_GET['section'];
 
 // Fetch content from the database for the given section
 $result = null;
-if ($section === 'about') {
-    $result = $db->manageAbout('read');
-} elseif ($section === 'experience') {
+if ($section === 'hero') {
+    $result = $db->managehero('read');
+}elseif($section === 'about'){
+    $result = $db->manageAbout('read');}
+ elseif ($section === 'experience') {
     $result = $db->manageExperience('read');
 } elseif ($section === 'projects') {
-    $result = $db->manageProject('read');
+    $result = $db->manageProject('read');}
+    elseif ($section === 'contact') {
+        $result = $db->managecontact('read');
 }
 
 //  no database content exists, load static content from default.html
@@ -43,7 +47,7 @@ if (!$result || $result->num_rows === 0) {
     $content = $result->fetch_assoc();
 }
 
-//  form submission to update static or dynamic content
+//  form submission to update dynamic content
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $description = $_POST['description'] ?? null;
@@ -64,12 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update content in the database
-    if ($section === 'about') {
+    if ($section === 'hero') {
+        $db->managehero('update', $content['id'] ?? null, $title, $description, $imageFileName);
+    } elseif($section === 'about') {
         $db->manageAbout('update', $content['id'] ?? null, $title, $description, $imageFileName);
-    } elseif ($section === 'experience') {
+    }
+    elseif ($section === 'experience') {
         $db->manageExperience('update', $content['id'] ?? null, $title, $description);
     } elseif ($section === 'projects') {
         $db->manageProject('update', $content['id'] ?? null, $title, $url_link, $imageFileName);
+    }
+    elseif ($section === 'contact') {
+        $db->managecontact('update', $content['id'] ?? null,$title, $url_link, $imageFileName);
     }
 
     header("Location: index.php?section=$section&update=success");
@@ -95,11 +105,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Description Field -->
         <label for="description">Description:</label>
-        <textarea name="description" id="description" required><?= htmlspecialchars($content['description'] ?? ''); ?></textarea>
+        <textarea name="description" id="description" ><?= htmlspecialchars($content['description'] ?? ''); ?></textarea>
 
         <!-- URL Link Field  -->
         <?php if ($section === 'projects'): ?>
             <label for="url_link">Project Link:</label>
+            <input type="url" name="url_link" id="url_link" value="<?= htmlspecialchars($content['url_link'] ?? ''); ?>">
+        <?php endif; ?>
+        <?php if ($section === 'contact'): ?>
+            <label for="url_link">contact Link:</label>
             <input type="url" name="url_link" id="url_link" value="<?= htmlspecialchars($content['url_link'] ?? ''); ?>">
         <?php endif; ?>
 

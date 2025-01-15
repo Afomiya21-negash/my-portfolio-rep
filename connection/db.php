@@ -34,6 +34,13 @@ class Database {
     }
 
     private function createTables() {
+        $heroTable = "CREATE TABLE IF NOT EXISTS hero (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            picture VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
         // Create `about` table
         $aboutTable = "CREATE TABLE IF NOT EXISTS about (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +58,7 @@ class Database {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
 
-        // Create `projects` table
+       
         $projectsTable = "CREATE TABLE IF NOT EXISTS projects (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
@@ -59,17 +66,52 @@ class Database {
             picture VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
+        $contactTable = "CREATE TABLE IF NOT EXISTS contact (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            url_link VARCHAR(255),
+            picture VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
+        
 
         if (
+            !$this->conn->query($heroTable) ||
             !$this->conn->query($aboutTable) ||
             !$this->conn->query($experienceTable) ||
-            !$this->conn->query($projectsTable)
+            !$this->conn->query($projectsTable)||
+            !$this->conn->query($contactTable) 
         ) {
             die("Error creating tables: " . $this->conn->error);
         }
     }
 
-    // Manage `about` table (CRUD Operations)
+    // Manage hero,about,experince and project table (CRUD Operations)
+    public function managehero($action, $id = null, $title = null, $description = null, $picture = null) {
+        switch ($action) {
+            case 'create':
+                $sql = "INSERT INTO hero (title, description, picture) VALUES (?, ?, ?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("sss", $title, $description, $picture);
+                return $stmt->execute();
+
+            case 'read':
+                $sql = "SELECT * FROM hero";
+                return $this->conn->query($sql);
+
+            case 'update':
+                $sql = "UPDATE hero SET title=?, description=?, picture=? WHERE id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("sssi", $title, $description, $picture, $id);
+                return $stmt->execute();
+
+            case 'delete':
+                $sql = "DELETE FROM hero WHERE id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("i", $id);
+                return $stmt->execute();
+        }
+    }
     public function manageAbout($action, $id = null, $title = null, $description = null, $picture = null) {
         switch ($action) {
             case 'create':
@@ -149,6 +191,32 @@ class Database {
                 return $stmt->execute();
         }
     }
+    public function managecontact($action, $id = null, $title = null, $url_link = null, $picture = null) {
+        switch ($action) {
+            case 'create':
+                $sql = "INSERT INTO contact ( title,url_link, picture) VALUES (?,?, ?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("sss", $title, $url_link, $picture);
+                return $stmt->execute();
+
+            case 'read':
+                $sql = "SELECT * FROM contact ";
+                return $this->conn->query($sql);
+
+            case 'update':
+                $sql = "UPDATE contact SET title=?, url_link=?, picture=? WHERE id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("sssi", $title, $url_link, $picture, $id);
+                return $stmt->execute();
+
+            case 'delete':
+                $sql = "DELETE FROM contact WHERE id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("i", $id);
+                return $stmt->execute();
+        }
+    }
+    
 }
 
 // Create the database instance
