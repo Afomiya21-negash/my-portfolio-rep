@@ -1,13 +1,13 @@
 <?php
 require_once 'connection/db.php';
 
-// Insert Project Content
+
 if (isset($_POST['add_project'])) {
     $title = $_POST['title'];
     $url_link = $_POST['url_link'];
     $picture = '';
 
-    //  Image Upload
+    
     if (!empty($_FILES['picture']['name'])) {
         $uploadDir = "uploads/";
         if (!is_dir($uploadDir)) {
@@ -22,14 +22,14 @@ if (isset($_POST['add_project'])) {
     exit;
 }
 
-// Update Project Content
+
 if (isset($_POST['update_project'])) {
     $id = $_POST['id'];
     $title = $_POST['title'];
     $url_link = $_POST['url_link'];
     $picture = $_POST['existing_picture'];
 
-    // Image Upload
+    
     if (!empty($_FILES['picture']['name'])) {
         $uploadDir = "uploads/";
         if (!is_dir($uploadDir)) {
@@ -44,7 +44,7 @@ if (isset($_POST['update_project'])) {
     exit;
 }
 
-// Delete Project Content
+
 if (isset($_GET['delete_project'])) {
     $id = $_GET['delete_project'];
     $db->manageProject('delete', $id);
@@ -52,6 +52,6 @@ if (isset($_GET['delete_project'])) {
     exit;
 }
 
-// Fetch Project Content 
+
 $projectContent = $db->manageProject('read');
 ?>

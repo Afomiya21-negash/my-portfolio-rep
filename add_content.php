@@ -39,10 +39,10 @@ if (isset($_POST['add_about'])) {
         move_uploaded_file($_FILES['picture']['tmp_name'], $picture);
     }
 
-    // Add Content to Database
+    
     $db->manageAbout('create', null, $title, $description, $picture);
 
-    // Redirect to Admin Panel
+    
     header("Location: index.php?section=about&add=success");
     exit;
 }
@@ -54,7 +54,7 @@ if (isset($_POST['add_experience'])) {
 
     $db->manageExperience('create', null, $title, $description);
 
-    // Redirect to Admin Panel
+    
     header("Location: index.php?section=experience&add=success");
     exit;
 }
@@ -77,7 +77,6 @@ if (isset($_POST['add_project'])) {
 
     $db->manageProject('create', null, $title, $url_link, $picture);
 
-    // Redirect to Admin Panel
     header("Location: admin.php?section=projects&add=success");
     exit;
 }
@@ -86,7 +85,7 @@ if (isset($_POST['add_contact'])) {
     $url_link = $_POST['url_link'];
     $picture = null;
 
-    // Image Upload
+    
     if (!empty($_FILES['picture']['name'])) {
         $uploadDir = "uploads/";
         if (!is_dir($uploadDir)) {
@@ -98,7 +97,7 @@ if (isset($_POST['add_contact'])) {
 
     $db->managecontact('create', null,$title,$url_link, $picture);
 
-    // Redirect to Admin Panel
+    
     header("Location: admin.php?section=contact&add=success");
     exit;
 }

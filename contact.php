@@ -1,7 +1,7 @@
 <?php
 require_once 'connection/db.php';
 
-// Insert Project Content
+
 if (isset($_POST['add_contact'])) {
     $picture = $_POST['picture'];
     $url_link = $_POST['url_link'];
@@ -22,7 +22,7 @@ if (isset($_POST['add_contact'])) {
     exit;
 }
 
-// Update Project Content
+
 if (isset($_POST['update_contact'])) {
     $id = $_POST['id'];
     $picture= $_POST['picture'];
@@ -44,7 +44,7 @@ if (isset($_POST['update_contact'])) {
     exit;
 }
 
-// Delete Project Content
+
 if (isset($_GET['delete_contact'])) {
     $id = $_GET['delete_contact'];
     $db->managecontact('delete', $id);
@@ -52,7 +52,7 @@ if (isset($_GET['delete_contact'])) {
     exit;
 }
 
-// Fetch Project Content 
+
 $contactContent = $db->managecontact('read');
 
 ?>

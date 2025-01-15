@@ -86,7 +86,7 @@ class Database {
         }
     }
 
-    // Manage hero,about,experince and project table (CRUD Operations)
+    // Manage hero,about,experince and project table 
     public function managehero($action, $id = null, $title = null, $description = null, $picture = null) {
         switch ($action) {
             case 'create':
@@ -138,7 +138,7 @@ class Database {
         }
     }
 
-    // Manage `experience` table (CRUD Operations)
+    
     public function manageExperience($action, $id = null, $title = null, $description = null) {
         switch ($action) {
             case 'create':
@@ -165,7 +165,7 @@ class Database {
         }
     }
 
-    // Manage `projects` table (CRUD Operations)
+    
     public function manageProject($action, $id = null, $title = null, $url_link = null, $picture = null) {
         switch ($action) {
             case 'create':
@@ -219,6 +219,6 @@ class Database {
     
 }
 
-// Create the database instance
+
 $db = new Database();
 ?>

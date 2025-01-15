@@ -1,7 +1,7 @@
 <?php
 require_once 'connection/db.php';
 
-// Insert Experience Content
+
 if (isset($_POST['add_experience'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
@@ -11,7 +11,7 @@ if (isset($_POST['add_experience'])) {
     exit;
 }
 
-// Update Experience Content
+
 if (isset($_POST['update_experience'])) {
     $id = $_POST['id'];
     $title = $_POST['title'];
@@ -22,7 +22,7 @@ if (isset($_POST['update_experience'])) {
     exit;
 }
 
-// Delete Experience Content
+
 if (isset($_GET['delete_experience'])) {
     $id = $_GET['delete_experience'];
     $db->manageExperience('delete', $id);
@@ -30,6 +30,6 @@ if (isset($_GET['delete_experience'])) {
     exit;
 }
 
-// Fetch Experience Content 
+
 $experienceContent = $db->manageExperience('read');
 ?>

@@ -1,7 +1,7 @@
 <?php
 require_once 'connection/db.php';
 
-// Insert About Content
+
 if (isset($_POST['add_about'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
@@ -22,7 +22,7 @@ if (isset($_POST['add_about'])) {
     exit;
 }
 
-// Update About Content
+
 if (isset($_POST['update_about'])) {
     $id = $_POST['id'];
     $title = $_POST['title'];
@@ -44,7 +44,7 @@ if (isset($_POST['update_about'])) {
     exit;
 }
 
-// Delete About Content
+
 if (isset($_GET['delete_about'])) {
     $id = $_GET['delete_about'];
     $db->manageAbout('delete', $id);
@@ -52,6 +52,6 @@ if (isset($_GET['delete_about'])) {
     exit;
 }
 
-// Fetch About Content 
+
 $aboutContent = $db->manageAbout('read');
 ?>

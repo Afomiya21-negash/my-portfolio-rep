@@ -1,14 +1,13 @@
 <?php
 require_once 'connection/db.php';
 
-// Check if a section is provided
 if (!isset($_GET['section']) || empty($_GET['section'])) {
     die("No section provided for editing.");
 }
 
 $section = $_GET['section'];
 
-// Fetch content from the database for the given section
+
 $result = null;
 if ($section === 'hero') {
     $result = $db->managehero('read');
@@ -47,14 +46,14 @@ if (!$result || $result->num_rows === 0) {
     $content = $result->fetch_assoc();
 }
 
-//  form submission to update dynamic content
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $description = $_POST['description'] ?? null;
     $url_link = $_POST['url_link'] ?? null;
     $imageFileName = $content['image_url'] ?? null;
 
-    //  image upload
+    
     if (!empty($_FILES['image']['name'])) {
         $uploadDir = "uploads/";
         if (!is_dir($uploadDir)) {
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Update content in the database
+    
     if ($section === 'hero') {
         $db->managehero('update', $content['id'] ?? null, $title, $description, $imageFileName);
     } elseif($section === 'about') {
@@ -103,11 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="title">Title:</label>
         <input type="text" name="title" id="title" value="<?= htmlspecialchars($content['title'] ?? ''); ?>" required>
 
-        <!-- Description Field -->
         <label for="description">Description:</label>
         <textarea name="description" id="description" ><?= htmlspecialchars($content['description'] ?? ''); ?></textarea>
 
-        <!-- URL Link Field  -->
+      
         <?php if ($section === 'projects'): ?>
             <label for="url_link">Project Link:</label>
             <input type="url" name="url_link" id="url_link" value="<?= htmlspecialchars($content['url_link'] ?? ''); ?>">
@@ -117,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="url" name="url_link" id="url_link" value="<?= htmlspecialchars($content['url_link'] ?? ''); ?>">
         <?php endif; ?>
 
-        <!-- Image Upload -->
+       
         <label for="image">Image:</label>
         <?php if (!empty($content['image_url'])): ?>
             <img src="<?= htmlspecialchars($content['image_url']); ?>" alt="Current Image" width="150"><br>
