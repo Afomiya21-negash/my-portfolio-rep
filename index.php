@@ -8,7 +8,7 @@ require_once 'connection/db.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="home.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <nav>
@@ -32,180 +32,156 @@ require_once 'connection/db.php';
     <!-- Hero Section -->
 <header class="hero">
   <div class="profile-container">
-    <!-- <img src="me.jpeg" alt="Afomiya Mesfin"> -->
     <?php
     $heroContent = $db->managehero('read');
     if ($heroContent->num_rows > 0) {
         while ($row = $heroContent->fetch_assoc()) {
-            echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='hero Picture'>";
-    
+            echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='Profile Picture'>";
         }
     }
     ?>
   </div>
   <div class="header-content">
-    <!-- <h1>Hello, I'm <span style="color: #3b6d91;">A</span>fomiya Mesfin</h1>
-    <p>Web Designer</p> -->
     <?php
     $heroContent = $db->managehero('read');
     if ($heroContent->num_rows > 0) {
         while ($row = $heroContent->fetch_assoc()) {
             echo "<h1>" . htmlspecialchars($row['title']) . "</h1>";
             echo "<p>" . htmlspecialchars($row['description']) . "</p>";
-    
         }
     }
     ?>
     <div class="btn-container">  
-        <button><a href="#contact">contact info</a></button>
-      </div>
+        <button><a href="#contact">Contact Me</a></button>
+        <button><a href="#projects">View Projects</a></button>
+    </div>
   </div>
- 
 </header>
 
+<!-- About Section -->
 <section id="about" class="about-section">
-<h2>About Me</h2>
-<?php
-    $aboutContent = $db->manageAbout('read');
-    if ($aboutContent->num_rows > 0) {
-        while ($row = $aboutContent->fetch_assoc()) {
-            echo "<h2>" . htmlspecialchars($row['title']) . "</h2>";
-    
-        }
-    }
-    ?>
+    <h2>About Me</h2>
     <div class="container1">
         <div class="profile-photo">
-            <!-- <img src="me2.jpg"  class="profile-photo">  -->
             <?php
-    $aboutContent = $db->manageAbout('read');
-    if ($aboutContent->num_rows > 0) {
-        while ($row= $aboutContent->fetch_assoc()) {
-            if (!empty($row['picture'])) {
-                echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='About Picture'>";
+            $aboutContent = $db->manageAbout('read');
+            if ($aboutContent->num_rows > 0) {
+                while ($row = $aboutContent->fetch_assoc()) {
+                    if (!empty($row['picture'])) {
+                        echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='About Picture'>";
+                    }
+                }
             }
-           
-        }
-    }
-    ?>
-          </div>
-          <div class="about-content">
-    <?php
-    $aboutContent = $db->manageAbout('read');
-    if ($aboutContent->num_rows > 0) {
-        while ($row = $aboutContent->fetch_assoc()) {
-            echo "<p>" . htmlspecialchars($row['description']) . "</p>";
-           
-        }
-    }
-    ?>
-    </div>
-
+            ?>
+        </div>
+        <div class="about-content">
+            <?php
+            $aboutContent = $db->manageAbout('read');
+            if ($aboutContent->num_rows > 0) {
+                while ($row = $aboutContent->fetch_assoc()) {
+                    echo "<p>" . nl2br(htmlspecialchars($row['description'])) . "</p>";
+                }
+            }
+            ?>
+        </div>
     </div>
 </section>
 
 <!-- Experience Section -->
-<h2 class="experience-head"  id="experience">Experience</h2>
-<section id="experience" class="experience-section">
-<div class="container">
-        <!-- <h3>frontend development</h3>
-        <p><span>HTML</span>: intermediate</p>
-        <p><span>CSS</span>: intermediate</p>
-        <p><span>JavaScript</span>: basic</p> -->
-        <?php
+<h2 class="experience-head" id="experience">Experience</h2>
+<section class="experience-section">
+    <?php
     $experienceContent = $db->manageExperience('read');
     if ($experienceContent->num_rows > 0) {
         while ($row = $experienceContent->fetch_assoc()) {
+            echo "<div class='container'>";
             echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
-            echo "<p>" . htmlspecialchars($row['description']) . "</p>";
-           
+            echo "<div>" . nl2br(htmlspecialchars($row['description'])) . "</div>";
+            echo "</div>";
         }
-    }
-    ?>  
-      
-    </div>
-    <!-- <div class="container"> -->
-        <!-- <h3>Backend development</h3>
-        <p><span>PHP</span>: basic</p>
-        <p><span>C#</span>: basic</p> -->
-        <!-- <?php
-    $experienceContent = $db->manageExperience('read');
-    if ($experienceContent->num_rows > 0) {
-        while ($row = $experienceContent->fetch_assoc()) {
-            echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
-            echo "<p>" . htmlspecialchars($row['description']) . "</p>";
-           
-        }
+    } else {
+        echo "<div class='container'>";
+        echo "<h3>No Experience Added Yet</h3>";
+        echo "<p>Experience details will appear here.</p>";
+        echo "</div>";
     }
     ?>
-    </div> -->
-   
 </section>
 
 <!-- Projects Section -->
-<div class="project-head" id="projects"> <h2>Projects</h2></div>
-<section id="projects" class="projects-section">
-     
-<div class="container1">
-        <div class="project-photo">
-            <!-- <img src="mind.avif">  
-            <div class="ptoject-para"><h4>Mindful Moments</h4><p>Will provide the website link soon.</p></div> -->
-            <?php
-    $projectContent = $db->manageProject('read');
-    if ($projectContent->num_rows > 0) {
-        while ($row = $projectContent->fetch_assoc()) {
-           
-            if (!empty($row['picture'])) {
-                echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='Project Picture'>";
-                
-            }
-            
-        }
-    }
-    ?>
-     <div class="ptoject-para">
-              <?php
-    $projectContent = $db->manageProject('read');
-    if ($projectContent->num_rows > 0) {
-        while ($row = $projectContent->fetch_assoc()) {
-           
-              echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
-            echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'>View Project</a>";
-           
-        }
-    }
-    ?></div>
-        </div>
-        
-    </div>
-   
-     
-</section>
-<section id="contact" class="contact-section">
-    <h2>Contact Me</h2>
-    <div class="contact-links">
-        <!-- <a href="mailto:afomiyamesfin@gmail.com">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/></svg>
-            afomiyamesfin@gmail.com
-        </a>
-
-        <a href="https://www.linkedinmobileapp.com/\?trk\=qrcode-onboarding" target="_parent">
-            <img src="linkedin.png">
-            LinkedIn 
-        </a> -->
+<div class="project-head" id="projects">
+    <h2>Projects</h2>
+</div>
+<section class="projects-section">
+    <div class="container1">
         <?php
-    $contactContent = $db->managecontact('read');
-    if ($contactContent->num_rows > 0) {
-        while ($row = $contactContent->fetch_assoc()) {
-           
-              echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'> <img src='" . htmlspecialchars($row['picture']) . "' alt='Project Picture'><p>" . htmlspecialchars($row['title']) . "</p>
-              </a>";
-           
-           
+        $projectContent = $db->manageProject('read');
+        if ($projectContent->num_rows > 0) {
+            while ($row = $projectContent->fetch_assoc()) {
+                echo '<div class="project-photo">';
+                echo '<div class="project-item">';
+                
+                // Check file type and display accordingly
+                if (!empty($row['picture'])) {
+                    $file_extension = pathinfo($row['picture'], PATHINFO_EXTENSION);
+                    $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+                    
+                    if (in_array(strtolower($file_extension), $image_extensions)) {
+                        // Display image
+                        echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='Project Image'>";
+                    } else {
+                        // Display file icon based on type
+                        echo "<div class='file-icon'>";
+                        if ($file_extension == 'pdf') {
+                            echo "<img src='icons/pdf-icon.png' alt='PDF File'>";
+                        } elseif (in_array($file_extension, ['doc', 'docx'])) {
+                            echo "<img src='icons/doc-icon.png' alt='Document File'>";
+                        } elseif ($file_extension == 'zip') {
+                            echo "<img src='icons/zip-icon.png' alt='ZIP File'>";
+                        } else {
+                            echo "<img src='icons/file-icon.png' alt='File'>";
+                        }
+                        echo "</div>";
+                    }
+                }
+                
+                echo '<div class="ptoject-para">';
+                echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
+                
+                // If it's a downloadable file, show download link
+                if (!empty($row['picture']) && !in_array(strtolower($file_extension), $image_extensions)) {
+                    echo "<p>Download: <a href='" . htmlspecialchars($row['picture']) . "' download>". basename($row['picture']) ."</a></p>";
+                }
+                
+                echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'>View Project</a>";
+                echo '</div>'; // Close ptoject-para
+                echo '</div>'; // Close project-item
+                echo '</div>'; // Close project-photo
+            }
+        } else {
+            echo '<p class="no-projects">No projects added yet.</p>';
         }
-    }
-    
-    ?>
+        ?>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+    <h2>Get In Touch</h2>
+    <div class="contact-links">
+        <?php
+        $contactContent = $db->managecontact('read');
+        if ($contactContent->num_rows > 0) {
+            while ($row = $contactContent->fetch_assoc()) {
+                echo "<a href='" . htmlspecialchars($row['url_link']) . "' target='_blank'>";
+                if (!empty($row['picture'])) {
+                    echo "<img src='" . htmlspecialchars($row['picture']) . "' alt='Contact Icon'>";
+                }
+                echo htmlspecialchars($row['title']);
+                echo "</a>";
+            }
+        }
+        ?>
     </div>
 </section>
 
@@ -217,10 +193,10 @@ require_once 'connection/db.php';
         <li><a href="#projects">Projects</a></li>
         <li><a href="#contact">Contact</a></li>
     </ul>
+    <div>
+        &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($heroContent->fetch_assoc()['title'] ?? 'Portfolio'); ?>. All rights reserved.
+    </div>
 </footer>
-<div class="footer">
-    &copy; 2024 Afomiya Mesfin. All rights reserved.
-</div>
 
     <script src="home.js"></script>
 

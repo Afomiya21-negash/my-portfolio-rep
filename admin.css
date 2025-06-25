@@ -1,0 +1,23 @@
+.admin-note {
+    background-color: #f8f9fa;
+    border-left: 4px solid #89A8B2;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.field-note {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: -5px;
+    margin-bottom: 5px;
+}
+
+.no-projects {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 30px;
+    width: 100%;
+}

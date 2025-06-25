@@ -1,0 +1,15 @@
+# Prevent caching for PHP files
+<FilesMatch "\.(php)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+</FilesMatch>
+
+# Ensure PHP errors are displayed
+php_flag display_errors on
+php_value error_reporting E_ALL
+
+# Protect session directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)/$ - [F]
+</IfModule>

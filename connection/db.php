@@ -74,15 +74,43 @@ class Database {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
         
-
+        // Add users table
+        $usersTable = "CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(100),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
+        
         if (
             !$this->conn->query($heroTable) ||
             !$this->conn->query($aboutTable) ||
             !$this->conn->query($experienceTable) ||
-            !$this->conn->query($projectsTable)||
-            !$this->conn->query($contactTable) 
+            !$this->conn->query($projectsTable) ||
+            !$this->conn->query($contactTable) ||
+            !$this->conn->query($usersTable)
         ) {
             die("Error creating tables: " . $this->conn->error);
+        }
+        
+        // Check if admin user exists, if not create it
+        $this->createAdminUserIfNotExists();
+    }
+
+    private function createAdminUserIfNotExists() {
+        $sql = "SELECT * FROM users WHERE username = 'mia'";
+        $result = $this->conn->query($sql);
+        
+        if ($result->num_rows == 0) {
+            // Admin user doesn't exist, create it
+            $username = "mia";
+            $password = password_hash("1738AMN@lafto", PASSWORD_DEFAULT);
+            
+            $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ss", $username, $password);
+            $stmt->execute();
         }
     }
 
@@ -211,6 +239,48 @@ class Database {
 
             case 'delete':
                 $sql = "DELETE FROM contact WHERE id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("i", $id);
+                return $stmt->execute();
+        }
+    }
+    
+    // Add a method to manage users
+    public function manageUsers($action, $id = null, $username = null, $password = null, $email = null) {
+        switch ($action) {
+            case 'create':
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("sss", $username, $hashedPassword, $email);
+                return $stmt->execute();
+                
+            case 'read':
+                $sql = "SELECT id, username, email, created_at FROM users";
+                return $this->conn->query($sql);
+                
+            case 'get':
+                $sql = "SELECT * FROM users WHERE username = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s", $username);
+                $stmt->execute();
+                return $stmt->get_result();
+                
+            case 'update':
+                if (!empty($password)) {
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $sql = "UPDATE users SET username=?, password=?, email=? WHERE id=?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("sssi", $username, $hashedPassword, $email, $id);
+                } else {
+                    $sql = "UPDATE users SET username=?, email=? WHERE id=?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("ssi", $username, $email, $id);
+                }
+                return $stmt->execute();
+                
+            case 'delete':
+                $sql = "DELETE FROM users WHERE id=?";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bind_param("i", $id);
                 return $stmt->execute();
